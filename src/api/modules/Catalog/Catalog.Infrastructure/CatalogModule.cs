@@ -30,6 +30,13 @@ public static class CatalogModule
             brandGroup.MapGetBrandListEndpoint();
             brandGroup.MapBrandUpdateEndpoint();
             brandGroup.MapBrandDeleteEndpoint();
+
+            var eventCatalogGroup = app.MapGroup("eventcatalogs").WithTags("eventcatalogs");
+            eventCatalogGroup.MapEventCatalogCreationEndpoint();
+            eventCatalogGroup.MapGetEventCatalogEndpoint();
+            eventCatalogGroup.MapGetEventCatalogListEndpoint();
+            eventCatalogGroup.MapEventCatalogUpdateEndpoint();
+            eventCatalogGroup.MapEventCatalogDeleteEndpoint();
         }
     }
     public static WebApplicationBuilder RegisterCatalogServices(this WebApplicationBuilder builder)
@@ -41,6 +48,8 @@ public static class CatalogModule
         builder.Services.AddKeyedScoped<IReadRepository<Product>, CatalogRepository<Product>>("catalog:products");
         builder.Services.AddKeyedScoped<IRepository<Brand>, CatalogRepository<Brand>>("catalog:brands");
         builder.Services.AddKeyedScoped<IReadRepository<Brand>, CatalogRepository<Brand>>("catalog:brands");
+        builder.Services.AddKeyedScoped<IRepository<EventCatalog>, CatalogRepository<EventCatalog>>("catalog:eventcatalogs");
+        builder.Services.AddKeyedScoped<IReadRepository<EventCatalog>, CatalogRepository<EventCatalog>>("catalog:eventcatalogs");
         return builder;
     }
     public static WebApplication UseCatalogModule(this WebApplication app)
