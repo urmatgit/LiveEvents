@@ -1,3 +1,4 @@
+using FSH.Framework.Infrastructure.Auth.Policy;
 using FSH.Starter.WebApi.Catalog.Application.EventCatalogs.Update.v1;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -15,19 +16,25 @@ public static class UpdateEventCatalogEndpoint
         
         
         return app.MapPut("/{id:guid}", async (
-                [AsParameters] UpdateEventCatalogCommand command,
+                Guid id,
+                 UpdateEventCatalogCommand command,
                 ISender sender) =>
             {
+                if (id != command.Id) return Results.BadRequest();
                 var result = await sender.Send(command);
                 return Results.Ok(result);
             })
             .Produces<UpdateEventCatalogResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .WithName("UpdateEventCatalog")
+            .WithSummary("update a EventCatalog")
+            .WithDescription("update a EventCatalog")
+            .WithName(nameof(UpdateEventCatalogEndpoint))
+            .RequirePermission("Permissions.EventCatalog.Update")
             .WithOpenApi(x =>
             {
                 x.Summary = "Updates an existing EventCatalog.";
                 return x;
-            });
+            })
+            .MapToApiVersion(1);
     }
 }

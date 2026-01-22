@@ -1,3 +1,4 @@
+using FSH.Framework.Infrastructure.Auth.Policy;
 using FSH.Starter.WebApi.Catalog.Application.EventCatalogs.Create.v1;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -12,22 +13,26 @@ public static class CreateEventCatalogEndpoint
 {
     internal static RouteHandlerBuilder MapEventCatalogCreationEndpoint(this IEndpointRouteBuilder app)
     {
-        
-        
+
+
         return app.MapPost("/", async (
-                [FromBody] CreateEventCatalogCommand command,
+                CreateEventCatalogCommand command,
                 ISender sender) =>
             {
                 var result = await sender.Send(command);
                 return Results.Ok(result);
             })
+            .WithName(nameof(CreateEventCatalogEndpoint))
+            .WithSummary("creates a event catalog")
+            .WithDescription("creates a event catalog")
             .Produces<CreateEventCatalogResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .WithName("CreateEventCatalog")
-            .WithOpenApi(x =>
-            {
-                x.Summary = "Creates a new EventCatalog.";
-                return x;
-            });
+            .RequirePermission("Permissions.EventCatalog.Create")
+            .MapToApiVersion(1);
+            //.WithOpenApi(x =>
+            //{
+            //    x.Summary = "Creates a new EventCatalog.";
+            //    return x;
+            //});
     }
 }

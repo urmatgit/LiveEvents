@@ -1,3 +1,5 @@
+using FSH.Framework.Core.Paging;
+using FSH.Framework.Infrastructure.Auth.Policy;
 using FSH.Starter.WebApi.Catalog.Application.EventCatalogs.Get.v1;
 using FSH.Starter.WebApi.Catalog.Application.EventCatalogs.Search.v1;
 using MediatR;
@@ -22,12 +24,15 @@ public static class SearchEventCatalogsEndpoint
                 var result = await sender.Send(command);
                 return Results.Ok(result);
             })
-            .Produces<EventCatalogResponse[]>(StatusCodes.Status200OK)
-            .WithName("GetEventCatalogs")
+            .WithName(nameof(SearchEventCatalogsEndpoint))
+            .Produces<PagedList<EventCatalogResponse>>(StatusCodes.Status200OK)
+            .RequirePermission("Permissions.EventCatalog.View")
             .WithOpenApi(x =>
             {
                 x.Summary = "Gets a list of EventCatalogs.";
+                x.Description= "Gets a list of EventCatalogs.";
                 return x;
-            });
+            })
+            .MapToApiVersion(1);
     }
 }

@@ -6,4 +6,6 @@ namespace FSH.Starter.WebApi.Catalog.Application.EventCatalogs.Search.v1;
 
 public class SearchEventCatalogsCommand : PaginationFilter, IRequest<PagedList<EventCatalogResponse>>
 {
+    public string? Name { get; set; }
+    public string? Description { get; set; }
 }

@@ -1,3 +1,4 @@
+using FSH.Framework.Infrastructure.Auth.Policy;
 using FSH.Starter.WebApi.Catalog.Application.EventCatalogs.Get.v1;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -20,13 +21,16 @@ public static class GetEventCatalogEndpoint
                 var result = await sender.Send(request);
                 return Results.Ok(result);
             })
+            .WithName(nameof(GetEventCatalogEndpoint))
             .Produces<EventCatalogResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status404NotFound)
-            .WithName("GetEventCatalog")
+            .RequirePermission("Permissions.EventCatalog.View")
             .WithOpenApi(x =>
             {
                 x.Summary = "Gets an EventCatalog by id.";
+                x.Description = "Gets an EventCatalog by id.";
                 return x;
-            });
+            })
+            .MapToApiVersion(1);
     }
 }
