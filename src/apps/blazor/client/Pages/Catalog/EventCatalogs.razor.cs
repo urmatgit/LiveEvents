@@ -23,7 +23,7 @@ public partial class EventCatalogs
             entityResource: FshResources.EventCatalogs,
             fields: new()
             {
-                new(eventcatalog => eventcatalog.Id, "Id", "Id"),
+             //   new(eventcatalog => eventcatalog.Id, "Id", "Id"),
                 new(eventcatalog => eventcatalog.Name, "Name", "Name"),
                 new(eventcatalog => eventcatalog.Description, "Description", "Description")
             },
