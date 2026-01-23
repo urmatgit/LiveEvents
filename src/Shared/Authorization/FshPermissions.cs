@@ -51,6 +51,14 @@ public static class FshPermissions
         new("Delete EventCatalogs", FshActions.Delete, FshResources.EventCatalogs),
         new("Export EventCatalogs", FshActions.Export, FshResources.EventCatalogs),
 
+        //SomeEvents
+        new("View SomeEvents", FshActions.View, FshResources.SomeEvents, IsBasic: true),
+        new("Search SomeEvents", FshActions.Search, FshResources.SomeEvents, IsBasic: true),
+        new("Create SomeEvents", FshActions.Create, FshResources.SomeEvents),
+        new("Update SomeEvents", FshActions.Update, FshResources.SomeEvents),
+        new("Delete SomeEvents", FshActions.Delete, FshResources.SomeEvents),
+        new("Export SomeEvents", FshActions.Export, FshResources.SomeEvents),
+
         //todos
         new("View Todos", FshActions.View, FshResources.Todos, IsBasic: true),
         new("Search Todos", FshActions.Search, FshResources.Todos, IsBasic: true),
