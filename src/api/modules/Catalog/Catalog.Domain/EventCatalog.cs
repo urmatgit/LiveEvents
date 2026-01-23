@@ -1,11 +1,12 @@
 using FSH.Framework.Core.Domain;
 using FSH.Framework.Core.Domain.Contracts;
+using FSH.Starter.WebApi.Catalog.Domain.Contracts;
 using FSH.Starter.WebApi.Catalog.Domain.Events;
 
 namespace FSH.Starter.WebApi.Catalog.Domain;
-public class EventCatalog : AuditableEntity, IAggregateRoot
+public class EventCatalog : AuditableEntity, IAggregateWithName
 {
-    public string Name { get; private set; } = string.Empty;
+    public string Name { get;  set; } = string.Empty;
     public string? Description { get; private set; }
 
     private EventCatalog() { }

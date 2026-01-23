@@ -15,8 +15,8 @@ public partial class EventCatalogs
 
     private EntityTable<EventCatalogResponse, Guid, EventCatalogViewModel> _table = default!;
 
-    protected void OnInitialized()
-    {
+    protected override void OnInitialized() =>
+    
         Context = new(
             entityName: "EventCatalog",
             entityNamePlural: "EventCatalogs",
@@ -32,21 +32,21 @@ public partial class EventCatalogs
             searchFunc: async filter =>
             {
                 var eventCatalogFilter = filter.Adapt<SearchEventCatalogsCommand>();
-                var result = await _client.GetEventCatalogsAsync(eventCatalogFilter);
+                var result = await _client.SearchEventCatalogsEndpointAsync("1", eventCatalogFilter);
                 return result.Adapt<PaginationResponse<EventCatalogResponse>>();
             },
             createFunc: async eventcatalog =>
             {
                 var command = eventcatalog.Adapt<CreateEventCatalogCommand>();
-                await _client.CreateEventCatalogAsync(command);
+                await _client.CreateEventCatalogEndpointAsync("1", command);
             },
             updateFunc: async (id, eventcatalog) =>
             {
-                await _client.UpdateEventCatalogEndpointAsync(id,eventcatalog.Adapt<UpdateEventCatalogCommand>());
+                await _client.UpdateEventCatalogEndpointAsync("1", id,eventcatalog.Adapt<UpdateEventCatalogCommand>());
             },
-            deleteFunc: async id => await _client.DeleteEventCatalogAsync(id));
+            deleteFunc: async id => await _client.DeleteEventCatalogEndpointAsync("1",id));
     }
-}
+
 
 public class EventCatalogViewModel : UpdateEventCatalogCommand
 {

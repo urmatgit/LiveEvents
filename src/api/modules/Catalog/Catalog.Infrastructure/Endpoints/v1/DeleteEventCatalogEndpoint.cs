@@ -26,7 +26,7 @@ public static class DeleteEventCatalogEndpoint
             .WithDescription("deletes an event catalog by id")
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .RequirePermission("Permissions.EventCatalog.Delete")
+            .RequirePermission("Permissions.EventCatalogs.Delete")
             .MapToApiVersion(1);
     }
 }

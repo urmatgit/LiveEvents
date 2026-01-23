@@ -29,12 +29,7 @@ public static class UpdateEventCatalogEndpoint
             .WithSummary("update a EventCatalog")
             .WithDescription("update a EventCatalog")
             .WithName(nameof(UpdateEventCatalogEndpoint))
-            .RequirePermission("Permissions.EventCatalog.Update")
-            .WithOpenApi(x =>
-            {
-                x.Summary = "Updates an existing EventCatalog.";
-                return x;
-            })
+            .RequirePermission("Permissions.EventCatalogs.Update")
             .MapToApiVersion(1);
     }
 }

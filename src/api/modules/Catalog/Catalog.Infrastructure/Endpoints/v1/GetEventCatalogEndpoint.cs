@@ -22,15 +22,11 @@ public static class GetEventCatalogEndpoint
                 return Results.Ok(result);
             })
             .WithName(nameof(GetEventCatalogEndpoint))
+            .WithSummary("Gets an EventCatalog by id.")
+            .WithDescription("Gets an EventCatalog by id.")
             .Produces<EventCatalogResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status404NotFound)
-            .RequirePermission("Permissions.EventCatalog.View")
-            .WithOpenApi(x =>
-            {
-                x.Summary = "Gets an EventCatalog by id.";
-                x.Description = "Gets an EventCatalog by id.";
-                return x;
-            })
+            .RequirePermission("Permissions.EventCatalogs.View")
             .MapToApiVersion(1);
     }
 }

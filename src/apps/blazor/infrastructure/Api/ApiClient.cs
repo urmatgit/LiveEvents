@@ -151,7 +151,7 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// creates a event catalog
         /// </remarks>
         /// <param name="version">The requested API version</param>
-        /// <returns>Created</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<CreateEventCatalogResponse> CreateEventCatalogEndpointAsync(string version, CreateEventCatalogCommand body);
 
@@ -163,7 +163,7 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// creates a event catalog
         /// </remarks>
         /// <param name="version">The requested API version</param>
-        /// <returns>Created</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<CreateEventCatalogResponse> CreateEventCatalogEndpointAsync(string version, CreateEventCatalogCommand body, System.Threading.CancellationToken cancellationToken);
 
@@ -173,9 +173,10 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// <remarks>
         /// Gets an EventCatalog by id.
         /// </remarks>
+        /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<EventCatalogResponse> GetEventCatalogEndpointAsync(System.Guid id);
+        System.Threading.Tasks.Task<EventCatalogResponse> GetEventCatalogEndpointAsync(string version, System.Guid id);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -184,30 +185,33 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// <remarks>
         /// Gets an EventCatalog by id.
         /// </remarks>
+        /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<EventCatalogResponse> GetEventCatalogEndpointAsync(System.Guid id, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<EventCatalogResponse> GetEventCatalogEndpointAsync(string version, System.Guid id, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
-        /// Updates an existing EventCatalog.
+        /// update a EventCatalog
         /// </summary>
         /// <remarks>
         /// update a EventCatalog
         /// </remarks>
+        /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<UpdateEventCatalogResponse> UpdateEventCatalogEndpointAsync(System.Guid id, UpdateEventCatalogCommand body);
+        System.Threading.Tasks.Task<UpdateEventCatalogResponse> UpdateEventCatalogEndpointAsync(string version, System.Guid id, UpdateEventCatalogCommand body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Updates an existing EventCatalog.
+        /// update a EventCatalog
         /// </summary>
         /// <remarks>
         /// update a EventCatalog
         /// </remarks>
+        /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<UpdateEventCatalogResponse> UpdateEventCatalogEndpointAsync(System.Guid id, UpdateEventCatalogCommand body, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<UpdateEventCatalogResponse> UpdateEventCatalogEndpointAsync(string version, System.Guid id, UpdateEventCatalogCommand body, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// deletes an event catalog by id
@@ -238,9 +242,10 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// <remarks>
         /// Gets a list of EventCatalogs.
         /// </remarks>
+        /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<EventCatalogResponsePagedList> SearchEventCatalogsEndpointAsync(SearchEventCatalogsCommand body);
+        System.Threading.Tasks.Task<EventCatalogResponsePagedList> SearchEventCatalogsEndpointAsync(string version, SearchEventCatalogsCommand body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -249,9 +254,10 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// <remarks>
         /// Gets a list of EventCatalogs.
         /// </remarks>
+        /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<EventCatalogResponsePagedList> SearchEventCatalogsEndpointAsync(SearchEventCatalogsCommand body, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<EventCatalogResponsePagedList> SearchEventCatalogsEndpointAsync(string version, SearchEventCatalogsCommand body, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// creates a product
@@ -1666,7 +1672,7 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// creates a event catalog
         /// </remarks>
         /// <param name="version">The requested API version</param>
-        /// <returns>Created</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<CreateEventCatalogResponse> CreateEventCatalogEndpointAsync(string version, CreateEventCatalogCommand body)
         {
@@ -1681,7 +1687,7 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// creates a event catalog
         /// </remarks>
         /// <param name="version">The requested API version</param>
-        /// <returns>Created</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<CreateEventCatalogResponse> CreateEventCatalogEndpointAsync(string version, CreateEventCatalogCommand body, System.Threading.CancellationToken cancellationToken)
         {
@@ -1734,7 +1740,7 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 201)
+                        if (status_ == 200)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<CreateEventCatalogResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
@@ -1742,16 +1748,6 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
-                        }
-                        else
-                        if (status_ == 400)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<ProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
@@ -1779,11 +1775,12 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// <remarks>
         /// Gets an EventCatalog by id.
         /// </remarks>
+        /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<EventCatalogResponse> GetEventCatalogEndpointAsync(System.Guid id)
+        public virtual System.Threading.Tasks.Task<EventCatalogResponse> GetEventCatalogEndpointAsync(string version, System.Guid id)
         {
-            return GetEventCatalogEndpointAsync(id, System.Threading.CancellationToken.None);
+            return GetEventCatalogEndpointAsync(version, id, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -1793,10 +1790,14 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// <remarks>
         /// Gets an EventCatalog by id.
         /// </remarks>
+        /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<EventCatalogResponse> GetEventCatalogEndpointAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<EventCatalogResponse> GetEventCatalogEndpointAsync(string version, System.Guid id, System.Threading.CancellationToken cancellationToken)
         {
+            if (version == null)
+                throw new System.ArgumentNullException("version");
+
             if (id == null)
                 throw new System.ArgumentNullException("id");
 
@@ -1813,6 +1814,7 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
                 
                     // Operation Path: "api/v{version}/catalog/eventcatalogs/{id}"
                     urlBuilder_.Append("api/v");
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(version, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/catalog/eventcatalogs/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
@@ -1879,29 +1881,34 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         }
 
         /// <summary>
-        /// Updates an existing EventCatalog.
+        /// update a EventCatalog
         /// </summary>
         /// <remarks>
         /// update a EventCatalog
         /// </remarks>
+        /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<UpdateEventCatalogResponse> UpdateEventCatalogEndpointAsync(System.Guid id, UpdateEventCatalogCommand body)
+        public virtual System.Threading.Tasks.Task<UpdateEventCatalogResponse> UpdateEventCatalogEndpointAsync(string version, System.Guid id, UpdateEventCatalogCommand body)
         {
-            return UpdateEventCatalogEndpointAsync(id, body, System.Threading.CancellationToken.None);
+            return UpdateEventCatalogEndpointAsync(version, id, body, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Updates an existing EventCatalog.
+        /// update a EventCatalog
         /// </summary>
         /// <remarks>
         /// update a EventCatalog
         /// </remarks>
+        /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UpdateEventCatalogResponse> UpdateEventCatalogEndpointAsync(System.Guid id, UpdateEventCatalogCommand body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<UpdateEventCatalogResponse> UpdateEventCatalogEndpointAsync(string version, System.Guid id, UpdateEventCatalogCommand body, System.Threading.CancellationToken cancellationToken)
         {
+            if (version == null)
+                throw new System.ArgumentNullException("version");
+
             if (id == null)
                 throw new System.ArgumentNullException("id");
 
@@ -1925,6 +1932,7 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
                 
                     // Operation Path: "api/v{version}/catalog/eventcatalogs/{id}"
                     urlBuilder_.Append("api/v");
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(version, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/catalog/eventcatalogs/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
@@ -2101,11 +2109,12 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// <remarks>
         /// Gets a list of EventCatalogs.
         /// </remarks>
+        /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<EventCatalogResponsePagedList> SearchEventCatalogsEndpointAsync(SearchEventCatalogsCommand body)
+        public virtual System.Threading.Tasks.Task<EventCatalogResponsePagedList> SearchEventCatalogsEndpointAsync(string version, SearchEventCatalogsCommand body)
         {
-            return SearchEventCatalogsEndpointAsync(body, System.Threading.CancellationToken.None);
+            return SearchEventCatalogsEndpointAsync(version, body, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -2115,10 +2124,14 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// <remarks>
         /// Gets a list of EventCatalogs.
         /// </remarks>
+        /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<EventCatalogResponsePagedList> SearchEventCatalogsEndpointAsync(SearchEventCatalogsCommand body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<EventCatalogResponsePagedList> SearchEventCatalogsEndpointAsync(string version, SearchEventCatalogsCommand body, System.Threading.CancellationToken cancellationToken)
         {
+            if (version == null)
+                throw new System.ArgumentNullException("version");
+
             if (body == null)
                 throw new System.ArgumentNullException("body");
 
@@ -2132,13 +2145,14 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
                     var content_ = new System.Net.Http.ByteArrayContent(json_);
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
                     // Operation Path: "api/v{version}/catalog/eventcatalogs/search"
                     urlBuilder_.Append("api/v");
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(version, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/catalog/eventcatalogs/search");
 
                     PrepareRequest(client_, request_, urlBuilder_);

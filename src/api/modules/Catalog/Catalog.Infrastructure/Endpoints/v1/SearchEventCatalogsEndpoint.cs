@@ -17,7 +17,7 @@ public static class SearchEventCatalogsEndpoint
     {
         
         
-        return app.MapGet("/search", async (
+        return app.MapPost("/search", async (
                 [FromBody] SearchEventCatalogsCommand command,
                 ISender sender) =>
             {
@@ -25,14 +25,10 @@ public static class SearchEventCatalogsEndpoint
                 return Results.Ok(result);
             })
             .WithName(nameof(SearchEventCatalogsEndpoint))
+            .WithSummary("Gets a list of EventCatalogs.")
+            .WithDescription("Gets a list of EventCatalogs.")
             .Produces<PagedList<EventCatalogResponse>>(StatusCodes.Status200OK)
-            .RequirePermission("Permissions.EventCatalog.View")
-            .WithOpenApi(x =>
-            {
-                x.Summary = "Gets a list of EventCatalogs.";
-                x.Description= "Gets a list of EventCatalogs.";
-                return x;
-            })
+            .RequirePermission("Permissions.EventCatalogs.View")
             .MapToApiVersion(1);
     }
 }

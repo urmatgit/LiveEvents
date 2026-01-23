@@ -25,9 +25,9 @@ public static class CreateEventCatalogEndpoint
             .WithName(nameof(CreateEventCatalogEndpoint))
             .WithSummary("creates a event catalog")
             .WithDescription("creates a event catalog")
-            .Produces<CreateEventCatalogResponse>(StatusCodes.Status201Created)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .RequirePermission("Permissions.EventCatalog.Create")
+            .Produces<CreateEventCatalogResponse>()
+            //.ProducesProblem(StatusCodes.Status400BadRequest)
+            .RequirePermission("Permissions.EventCatalogs.Create")
             .MapToApiVersion(1);
             //.WithOpenApi(x =>
             //{
