@@ -39,14 +39,25 @@ public partial class SomeEvents
                 var someEventFilter = filter.Adapt<SearchSomeEventsCommand>();
                 someEventFilter.EventCatalogId = SearchEventCatalogId;
                 var result = await _client.SearchSomeEventsEndpointAsync("1", someEventFilter);
-                return result.Adapt<PaginationResponse<SomeEventResponse>>();
+                var paginatedResult = result.Adapt<PaginationResponse<SomeEventResponse>>();
+                
+                // Преобразуем результат, чтобы разделить дату и время для отображения
+                foreach (var item in paginatedResult.Items)
+                {
+                    var viewModel = item.Adapt<SomeEventViewModel>();
+                    viewModel.LocalEventDateTime = item.EventDate;
+                }
+                
+                return paginatedResult;
             },
             createFunc: async someEvent =>
             {
+                // The LocalEventDateTime property setter handles the UTC conversion automatically
                 await _client.CreateSomeEventEndpointAsync("1", someEvent.Adapt<CreateSomeEventCommand>());
             },
             updateFunc: async (id, someEvent) =>
             {
+                // The LocalEventDateTime property setter handles the UTC conversion automatically
                 await _client.UpdateSomeEventEndpointAsync("1", id, someEvent.Adapt<UpdateSomeEventCommand>());
             },
             deleteFunc: async id => await _client.DeleteSomeEventEndpointAsync("1", id));
