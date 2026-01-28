@@ -13,7 +13,7 @@ public static class UpdateSomeEventEndpoint
 {
     internal static RouteHandlerBuilder MapSomeEventUpdateEndpoint(this IEndpointRouteBuilder app)
     {
-        return app.MapPut("/someevents/{id:guid}", async (
+        return app.MapPut("/{id:guid}", async (
                 Guid id,
                 UpdateSomeEventCommand command,
                 ISender sender) =>

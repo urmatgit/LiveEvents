@@ -13,7 +13,7 @@ public static class CreateSomeEventEndpoint
 {
     internal static RouteHandlerBuilder MapSomeEventCreationEndpoint(this IEndpointRouteBuilder app)
     {
-        return app.MapPost("/someevents", async (
+        return app.MapPost("/", async (
                 CreateSomeEventCommand command,
                 ISender sender) =>
             {

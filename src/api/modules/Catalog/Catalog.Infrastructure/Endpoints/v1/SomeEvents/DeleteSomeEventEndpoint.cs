@@ -13,7 +13,7 @@ public static class DeleteSomeEventEndpoint
 {
     internal static RouteHandlerBuilder MapSomeEventDeleteEndpoint(this IEndpointRouteBuilder app)
     {
-        return app.MapDelete("/someevents/{id:guid}", async (
+        return app.MapDelete("/{id:guid}", async (
                 Guid id,
                 ISender sender) =>
             {

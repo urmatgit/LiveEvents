@@ -15,8 +15,8 @@ public static class SearchSomeEventsEndpoint
 {
     internal static RouteHandlerBuilder MapGetSomeEventListEndpoint(this IEndpointRouteBuilder app)
     {
-        return app.MapGet("/someevents", async (
-                [AsParameters] SearchSomeEventsCommand command,
+        return app.MapPost("/search", async (
+                [FromBody] SearchSomeEventsCommand command,
                 ISender sender) =>
             {
                 var result = await sender.Send(command);

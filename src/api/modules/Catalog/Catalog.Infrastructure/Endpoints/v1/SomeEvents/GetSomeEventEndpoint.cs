@@ -13,7 +13,7 @@ public static class GetSomeEventEndpoint
 {
     internal static RouteHandlerBuilder MapGetSomeEventEndpoint(this IEndpointRouteBuilder app)
     {
-        return app.MapGet("/someevents/{id:guid}", async (
+        return app.MapGet("/{id:guid}", async (
                 Guid id,
                 ISender sender) =>
             {

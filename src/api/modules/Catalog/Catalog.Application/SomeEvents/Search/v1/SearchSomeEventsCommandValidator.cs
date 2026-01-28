@@ -12,7 +12,6 @@ public class SearchSomeEventsCommandValidator : AbstractValidator<SearchSomeEven
         RuleFor(e => e.Description)
             .MaximumLength(1000);
             
-        RuleFor(e => e.EventCatalogId)
-            .NotEmpty();
+        
     }
 }
