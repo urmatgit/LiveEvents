@@ -8,6 +8,9 @@ public class EventCatalog : AuditableEntity, IAggregateWithName
 {
     public string Name { get;  set; } = string.Empty;
     public string? Description { get; private set; }
+    
+    // Коллекция связанных SomeEvent
+    public virtual ICollection<SomeEvent> SomeEvents { get; protected set; } = new List<SomeEvent>();
 
     private EventCatalog() { }
 

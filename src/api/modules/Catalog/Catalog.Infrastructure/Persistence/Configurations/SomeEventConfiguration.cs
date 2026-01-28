@@ -22,8 +22,8 @@ internal sealed class SomeEventConfiguration : IEntityTypeConfiguration<SomeEven
         builder.Property(x => x.EventCatalogId);
         
         builder.HasOne(x => x.EventCatalog)
-            .WithMany()
+            .WithMany(x => x.SomeEvents)
             .HasForeignKey(x => x.EventCatalogId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
