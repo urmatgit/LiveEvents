@@ -30,7 +30,7 @@ public partial class SomeEvents
                 new(field => field.Description, "Description", "Description"),
                 new(field => field.Price, "Price", "Price"),
                 new(field => field.EventDate, "EventDate", "EventDate"),
-                new(field => field.EventCatalogId, "EventCatalogId", "EventCatalogId")
+                new(field => field.EventCatalogName, "EventCatalogName", "EventCatalogName")
             },
             enableAdvancedSearch: true,
             idFunc: field => field.Id,

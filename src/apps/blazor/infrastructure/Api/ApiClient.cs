@@ -7046,7 +7046,7 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         public System.Guid OrganizationId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("minParticipant")]
-        public int MinParticipant { get; set; } = 1;
+        public int MinParticipant { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("maxParticipant")]
         public int MaxParticipant { get; set; } = default!;
@@ -7599,6 +7599,9 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
 
         [System.Text.Json.Serialization.JsonPropertyName("eventCatalogId")]
         public System.Guid EventCatalogId { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("eventCatalogName")]
+        public string? EventCatalogName { get; set; } = default!;
 
     }
 

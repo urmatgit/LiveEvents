@@ -10,4 +10,5 @@ public record SomeEventResponse(
     int Durations,
     double Price,
     DateTime EventDate,
-    Guid EventCatalogId);
+    Guid EventCatalogId,
+    string EventCatalogName);

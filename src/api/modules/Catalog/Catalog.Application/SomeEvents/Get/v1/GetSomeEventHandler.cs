@@ -31,7 +31,8 @@ public sealed class GetSomeEventHandler(
                     someEventItem.Durations,
                     someEventItem.Price,
                     someEventItem.EventDate,
-                    someEventItem.EventCatalogId);
+                    someEventItem.EventCatalogId,
+                    someEventItem.EventCatalog != null ? someEventItem.EventCatalog.Name : string.Empty);
             },
             cancellationToken: cancellationToken);
         return item!;

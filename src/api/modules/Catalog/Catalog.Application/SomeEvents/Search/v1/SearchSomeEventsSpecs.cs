@@ -11,7 +11,9 @@ public class SearchSomeEventsSpecs : EntitiesByPaginationFilterSpec<SomeEvent, S
     public SearchSomeEventsSpecs(SearchSomeEventsCommand command)
         : base(command) =>
         Query
+            .Include(x => x.EventCatalog)
             .OrderBy(c => c.Name, !command.HasOrderBy())
             .Where(b => b.Name.Contains(command.Keyword), !string.IsNullOrEmpty(command.Keyword))
             .Where(c => c.EventCatalogId == command.EventCatalogId, command.EventCatalogId.HasValue);
+            
 }
