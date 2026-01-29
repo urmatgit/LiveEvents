@@ -6,18 +6,25 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
+# Copy csproj and restore as distinct layers
 COPY ["api/server/Server.csproj", "api/server/"]
-COPY ["api/framework/Infrastructure/Infrastructure.csproj", "api/framework/Infrastructure/"]
 COPY ["api/framework/Core/Core.csproj", "api/framework/Core/"]
-COPY ["api/modules/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj", "api/modules/Catalog/Catalog.Infrastructure/"]
-COPY ["api/modules/Catalog/Catalog.Application/Catalog.Application.csproj", "api/modules/Catalog/Catalog.Application/"]
+COPY ["api/framework/Infrastructure/Infrastructure.csproj", "api/framework/Infrastructure/"]
 COPY ["api/modules/Catalog/Catalog.Domain/Catalog.Domain.csproj", "api/modules/Catalog/Catalog.Domain/"]
+COPY ["api/modules/Catalog/Catalog.Application/Catalog.Application.csproj", "api/modules/Catalog/Catalog.Application/"]
+COPY ["api/modules/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj", "api/modules/Catalog/Catalog.Infrastructure/"]
 COPY ["api/modules/Todo/Todo.csproj", "api/modules/Todo/"]
 COPY ["api/migrations/MSSQL/MSSQL.csproj", "api/migrations/MSSQL/"]
 COPY ["api/migrations/PostgreSQL/PostgreSQL.csproj", "api/migrations/PostgreSQL/"]
 COPY ["Shared/Shared.csproj", "Shared/"]
 
-RUN dotnet restore "api/server/Server.csproj"
+# Restore dependencies
+WORKDIR "/src/api/server"
+RUN dotnet restore
+
+# Copy everything else
+WORKDIR "/src"
 COPY . .
 WORKDIR "/src/api/server"
 RUN dotnet build "Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
