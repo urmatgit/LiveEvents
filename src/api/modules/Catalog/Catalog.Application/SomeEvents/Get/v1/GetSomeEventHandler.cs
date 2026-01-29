@@ -4,12 +4,14 @@ using FSH.Framework.Core.Persistence;
 using FSH.Framework.Core.Caching;
 using FSH.Starter.WebApi.Catalog.Domain;
 using MediatR;
+using FSH.Framework.Core.Identity.Users.Abstractions;
 
 namespace FSH.Starter.WebApi.Catalog.Application.SomeEvents.Get.v1;
 
 public sealed class GetSomeEventHandler(
     [FromKeyedServices("catalog:someevents")] IReadRepository<SomeEvent> repository,
-    ICacheService cache)
+    ICacheService cache,
+    IUserService userService)
     : IRequestHandler<GetSomeEventRequest, SomeEventResponse>
 {
     public async Task<SomeEventResponse> Handle(GetSomeEventRequest request, CancellationToken cancellationToken)
@@ -20,12 +22,16 @@ public sealed class GetSomeEventHandler(
             async () =>
             {
                 var someEventItem = await repository.GetByIdAsync(request.Id, cancellationToken);
+                
                 if (someEventItem == null) throw new SomeEventNotFoundException(request.Id);
+                var userInfo = await userService.GetAsync(someEventItem.OrganizationId.ToString(),cancellationToken);
+
                 return new SomeEventResponse(
                     someEventItem.Id,
                     someEventItem.Name,
                     someEventItem.Description,
                     someEventItem.OrganizationId,
+                    userInfo!=null? $"{userInfo.FirstName} {userInfo.LastName}":string.Empty,
                     someEventItem.MinParticipant,
                     someEventItem.MaxParticipant,
                     someEventItem.Durations,

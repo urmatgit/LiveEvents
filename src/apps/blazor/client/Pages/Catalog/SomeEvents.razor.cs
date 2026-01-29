@@ -27,6 +27,7 @@ public partial class SomeEvents
             {
                 new(field => field.Id,"Id", "Id"),
                 new(field => field.Name,"Name", "Name"),
+                new(field => field.OrganizationName,"Organization", "Organization"),
                 new(field => field.Description, "Description", "Description"),
                 new(field => field.Price, "Price", "Price"),
                 new(field => field.EventDate, "EventDate", "EventDate"),

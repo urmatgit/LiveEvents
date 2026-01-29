@@ -7582,6 +7582,9 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         [System.Text.Json.Serialization.JsonPropertyName("organizationId")]
         public System.Guid OrganizationId { get; set; } = default!;
 
+        [System.Text.Json.Serialization.JsonPropertyName("organizationName")]
+        public string? OrganizationName { get; set; } = default!;
+
         [System.Text.Json.Serialization.JsonPropertyName("minParticipant")]
         public int MinParticipant { get; set; } = default!;
 

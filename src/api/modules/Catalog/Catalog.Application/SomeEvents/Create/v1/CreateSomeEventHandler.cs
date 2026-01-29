@@ -1,3 +1,4 @@
+using FSH.Framework.Core.Identity.Users.Abstractions;
 using FSH.Framework.Core.Persistence;
 using FSH.Starter.WebApi.Catalog.Domain;
 using MediatR;
@@ -8,15 +9,17 @@ namespace FSH.Starter.WebApi.Catalog.Application.SomeEvents.Create.v1;
 
 public sealed class CreateSomeEventHandler(
     [FromKeyedServices("catalog:someevents")] IRepository<SomeEvent> repository,
-    ILogger<CreateSomeEventHandler> logger)
+    ILogger<CreateSomeEventHandler> logger,
+    ICurrentUser _currentUser)
     : IRequestHandler<CreateSomeEventCommand, CreateSomeEventResponse>
+    
 {
     public async Task<CreateSomeEventResponse> Handle(CreateSomeEventCommand request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
         logger.LogInformation("Creating SomeEvent with Name: {Name}, OrganizationId: {OrganizationId}", request.Name, request.OrganizationId);
-
+        request.OrganizationId = _currentUser.GetUserId();
         var someEvent = SomeEvent.Create(
             request.Name,
             request.Description,

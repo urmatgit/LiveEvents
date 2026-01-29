@@ -5,6 +5,7 @@ public record SomeEventResponse(
     string Name,
     string Description,
     Guid OrganizationId,
+    string OrganizationName,
     int MinParticipant,
     int MaxParticipant,
     int Durations,

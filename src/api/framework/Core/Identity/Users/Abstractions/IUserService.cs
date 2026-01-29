@@ -9,7 +9,7 @@ using FSH.Framework.Core.Identity.Users.Features.ToggleUserStatus;
 using FSH.Framework.Core.Identity.Users.Features.UpdateUser;
 
 namespace FSH.Framework.Core.Identity.Users.Abstractions;
-public interface IUserService
+public partial interface IUserService
 {
     Task<bool> ExistsWithNameAsync(string name);
     Task<bool> ExistsWithEmailAsync(string email, string? exceptId = null);
