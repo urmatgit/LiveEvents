@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: liveevents-api
+    env: docker
+    region: frankfurt  # или другой регион по вашему выбору
+    plan: free
+    branch: main
+    healthCheckPath: /health
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: DatabaseOptions__ConnectionString
+        sync: false  # Это означает, что значение будет задано вручную в интерфейсе Render
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
+      - key: JwtOptions__Key
+        sync: false
+      - key: MailOptions__Password
+        sync: false
+      - key: Serilog__MinimumLevel__Default
+        value: Information
