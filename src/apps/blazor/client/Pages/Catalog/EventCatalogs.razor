@@ -1,4 +1,5 @@
 @page "/catalog/eventcatalogs"
+@inject IJSRuntime JS
 
 <PageHeader Title="EventCatalogs" Header="EventCatalogs" SubHeader="Manage your EventCatalogs." />
 
@@ -9,36 +10,137 @@
     </AdvancedSearchContent>
 
     <EditFormContent>
-        @if (!Context.AddEditModal.IsCreate)
-        {
-            <MudItem xs="12" md="6">
-                <MudTextField Value="context.Id" Underline=false ReadOnly Label="EventCatalog Id" />
-            </MudItem>
-        }
-        <MudItem xs="12" md="6">
-            <MudTextField Label="Name" For="@(() => context.Name)" @bind-Value="context.Name" />
-        </MudItem>
-        <MudItem xs="12" md="6">
-            <MudTextField Label="Description" For="@(() => context.Description)" @bind-Value="context.Description" />
-        </MudItem>
-        <MudItem xs="12" md="12">
-            <MudItem>
-                <div>
-                    @if(!Context.AddEditModal.IsCreate)
-                    {
-                        <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Target="_blank"
-                            StartIcon="@Icons.Material.Filled.RemoveRedEye" Style="margin-left: 5px;" >
-                            View
-                        </MudButton>
+        <MudGrid>
+            @if (!Context.AddEditModal.IsCreate)
+            {
+                <MudItem xs="12" md="6">
+                    <MudTextField Value="context.Id" Underline=false ReadOnly Label="EventCatalog Id" />
+                </MudItem>
+            }
+            
+            <MudItem xs="12" sm="12" md="12">
+                    <MudCard Outlined>
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText>Event Catalog Details</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <MudGrid>
+                                <MudItem xs="12" md="6">
+                                <MudCard Outlined>
+                                    <MudCardContent Style="padding:0px!important">
+                                        <div class="d-flex justify-center mb-4">
+                                            @if (context.ImageUrl != null)
+                                            {
+                                                <MudAvatar Style=" width:100%;height:auto;border-radius:0px!important;">
+                                                    <MudImage Src="@context.ImageUrl" Alt="Event Image" />
+                                                </MudAvatar>
+                                            }
+                                            else
+                                            {
+                                                <MudAvatar Square="true" Color="Color.Surface" Style="width:100%;height:300px;">No Image</MudAvatar>
+                                            }
+                                        </div>
+                                        <MudText Typo="Typo.h6" Align="Align.Center">Event Image</MudText>
+                                        <MudText Align="Align.Center">@context.Name</MudText>
+                                    </MudCardContent>
+                                    <MudCardActions Class="d-flex justify-center">
+                                        <InputFile id="eventImageInput" OnChange="OnImageFileChanged" hidden accept=".jpg,.jpeg,.png,.webp" />
+                                        <div style="padding-bottom:20px">
+                                            <MudButton DropShadow="false" HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                                                       StartIcon="@Icons.Material.Filled.CloudUpload" for="eventImageInput">
+                                                Upload Event Image
+                                            </MudButton>
+                                            @if (context.ImageUrl != null)
+                                            {
+                                                <MudButton HtmlTag="label" DropShadow="false" Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Target="_blank"
+                                                           StartIcon="@Icons.Material.Filled.RemoveRedEye" Href="@context.ImageUrl" Style="margin-left: 5px;">
+                                                    View
+                                                </MudButton>
 
-                        <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
-                                   StartIcon="@Icons.Material.Filled.Delete" Style="margin-left: 5px;">
-                            Delete
-                        </MudButton>
-                    }
-                </div>
+                                                <MudButton HtmlTag="label" DropShadow="false" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
+                                                           StartIcon="@Icons.Material.Filled.Delete" OnClick="RemoveImageAsync" Style="margin-left: 5px;">
+                                                    Delete
+                                                </MudButton>
+                                            }
+                                        </div>
+                                    </MudCardActions>
+                                </MudCard>
+                                </MudItem>
+                                <MudItem xs="12" md="6">
+                                    <MudTextField @bind-Value="@context.Name" For="@(() => context.Name)"
+                                        Label="Name" Variant="Variant.Outlined" />
+                                <MudTextField @bind-Value="@context.Description" For="@(() => context.Description)"
+                                              Label="Description" Variant="Variant.Outlined" />
+                                </MudItem>
+                                
+                            </MudGrid>
+                        </MudCardContent>
+                        @* <MudCardActions Class="pb-4 pl-4">
+                            <MudButton DropShadow="false" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" StartIcon="@Icons.Material.Filled.Save"
+                                ButtonType="ButtonType.Submit">Save Changes</MudButton>
+                        </MudCardActions> *@
+                    </MudCard>
             </MudItem>
-        </MudItem>
+        </MudGrid>
     </EditFormContent>
 
 </EntityTable>
+
+@code {
+    private RenderFragment<EventCatalogResponse> ImageFieldTemplate => item => __builder =>
+   {
+       <MudItem>
+           @if(item.ImageUrl!=null)
+           {
+               <MudImage Src="@item.ImageUrl.ToString()" Alt="Event Image" Width="50" Height="50" Class="rounded-circle" />
+           }
+           else
+           {
+               <MudAvatar Color="Color.Default" Size="Size.Small">No Img</MudAvatar>
+           }
+           
+       </MudItem>
+
+
+    };
+    private async Task OnImageFileChanged(InputFileChangeEventArgs e)
+    {
+        var file = e.GetMultipleFiles(1).FirstOrDefault();
+        if (file != null)
+        {
+            // Присваиваем файл в свойство модели
+            Context.AddEditModal.RequestModel.ImageFile = file;
+            // Попытка 1: Base64 для маленьких файлов
+            if (file.Size <= 500 * 1024)
+            {
+                // Читаем файл как base64
+                var buffer = new byte[file.Size];
+                using (var stream = file.OpenReadStream())
+                {
+                    await stream.ReadAsync(buffer);
+                }
+                // Присваиваем файл в свойство модели
+                Context.AddEditModal.RequestModel.ImageUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+            }
+            else
+            {
+                // Попытка 2: Сжатие через JavaScript
+                var compressed = await JS.InvokeAsync<string>("compressImageToBase64",
+                file, 800, 600, 0.7);
+
+                Context.AddEditModal.RequestModel.ImageUrl = $"data:{file.ContentType};base64,{compressed}";
+            }
+             StateHasChanged();
+            await InvokeAsync(StateHasChanged);
+            // Если в диалоге
+           // if (MudDialog != null)
+            {
+                Context.AddEditModal.ForceRender();
+                
+            }
+       }
+   }
+
+}
