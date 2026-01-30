@@ -1,7 +1,8 @@
 using Ardalis.Specification;
 using FSH.Framework.Core.Exceptions;
 using FSH.Framework.Core.Persistence;
-
+using FSH.Framework.Core.Storage;
+using FSH.Framework.Core.Storage.File;
 using FSH.Starter.WebApi.Catalog.Application.Specifications;
 using FSH.Starter.WebApi.Catalog.Domain;
 using MediatR;
@@ -12,7 +13,9 @@ namespace FSH.Starter.WebApi.Catalog.Application.EventCatalogs.Create.v1;
 
 public sealed class CreateEventCatalogHandler(
     ILogger<CreateEventCatalogHandler> logger,
-    [FromKeyedServices("catalog:eventcatalogs")] IRepository<EventCatalog> repository, [FromKeyedServices("catalog:eventcatalogs")] IReadRepository<EventCatalog> readRepository)
+    [FromKeyedServices("catalog:eventcatalogs")] IRepository<EventCatalog> repository,
+    [FromKeyedServices("catalog:eventcatalogs")] IReadRepository<EventCatalog> readRepository,
+    IStorageService storageService)
     : IRequestHandler<CreateEventCatalogCommand, CreateEventCatalogResponse>
 {
     public async Task<CreateEventCatalogResponse> Handle(CreateEventCatalogCommand request, CancellationToken cancellationToken)
@@ -20,11 +23,18 @@ public sealed class CreateEventCatalogHandler(
         ArgumentNullException.ThrowIfNull(request);
         var getByNameSpec = new GetByNameSpecification<EventCatalog>(request.Name);
         var exitEventCatalog = await readRepository.ListAsync(getByNameSpec, cancellationToken);
-        if (exitEventCatalog != null && exitEventCatalog.Count>0)
+        if (exitEventCatalog != null && exitEventCatalog.Count > 0)
         {
             throw new CustomException($"{request.Name} already exists!");
         }
-        var eventCatalog = EventCatalog.Create(request.Name!, request.Description);
+        
+        Uri? imageUrl = null;
+        if (request.Image != null)
+        {
+            imageUrl = await storageService.UploadAsync<EventCatalog>(request.Image, FileType.Image, cancellationToken);
+        }
+        
+        var eventCatalog = EventCatalog.Create(request.Name!, request.Description, imageUrl);
         await repository.AddAsync(eventCatalog, cancellationToken);
         logger.LogInformation("eventcatalog created {EventCatalogId}", eventCatalog.Id);
         return new CreateEventCatalogResponse(eventCatalog.Id);

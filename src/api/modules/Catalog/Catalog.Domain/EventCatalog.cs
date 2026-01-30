@@ -8,26 +8,28 @@ public class EventCatalog : AuditableEntity, IAggregateWithName
 {
     public string Name { get;  set; } = string.Empty;
     public string? Description { get; private set; }
+    public Uri? ImageUrl { get; private set; }
     
     // Коллекция связанных SomeEvent
     public virtual ICollection<SomeEvent> SomeEvents { get; protected set; } = new List<SomeEvent>();
 
     private EventCatalog() { }
 
-    private EventCatalog(Guid id, string name, string? description)
+    private EventCatalog(Guid id, string name, string? description, Uri? imageUrl = null)
     {
         Id = id;
         Name = name;
         Description = description;
+        ImageUrl = imageUrl;
         QueueDomainEvent(new EventCatalogCreated { EventCatalog = this });
     }
 
-    public static EventCatalog Create(string name, string? description)
+    public static EventCatalog Create(string name, string? description, Uri? imageUrl = null)
     {
-        return new EventCatalog(Guid.NewGuid(), name, description);
+        return new EventCatalog(Guid.NewGuid(), name, description, imageUrl);
     }
 
-    public EventCatalog Update(string? name, string? description)
+    public EventCatalog Update(string? name, string? description, Uri? imageUrl = null)
     {
         bool isUpdated = false;
 
@@ -40,6 +42,12 @@ public class EventCatalog : AuditableEntity, IAggregateWithName
         if (!string.Equals(Description, description, StringComparison.OrdinalIgnoreCase))
         {
             Description = description;
+            isUpdated = true;
+        }
+
+        if (ImageUrl != imageUrl)
+        {
+            ImageUrl = imageUrl;
             isUpdated = true;
         }
 

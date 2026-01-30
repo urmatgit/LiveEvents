@@ -21,7 +21,7 @@ public sealed class GetEventCatalogHandler(
             {
                 var eventCatalogItem = await repository.GetByIdAsync(request.Id, cancellationToken);
                 if (eventCatalogItem == null) throw new EventCatalogNotFoundException(request.Id);
-                return new EventCatalogResponse(eventCatalogItem.Id, eventCatalogItem.Name, eventCatalogItem.Description);
+                return new EventCatalogResponse(eventCatalogItem.Id, eventCatalogItem.Name, eventCatalogItem.Description, eventCatalogItem.ImageUrl);
             },
             cancellationToken: cancellationToken);
         return item!;
