@@ -22,11 +22,12 @@ public partial class EventCatalogs
             entityNamePlural: "EventCatalogs",
             entityResource: FshResources.EventCatalogs,
             fields: new()
-            {
-             //   new(eventcatalog => eventcatalog.Id, "Id", "Id"),
-                new(eventcatalog => eventcatalog.Name, "Name", "Name"),
-                new(eventcatalog => eventcatalog.Description, "Description", "Description")
-            },
+             {
+              //   new(eventcatalog => eventcatalog.Id, "Id", "Id"),
+                 new(eventcatalog => eventcatalog.Name, "Name", "Name"),
+                 new(eventcatalog => eventcatalog.Description, "Description", "Description"),
+                 new(eventcatalog => eventcatalog.ImageUrl, "Image", "ImageUrl")
+             },
             enableAdvancedSearch: true,
             idFunc: eventcatalog => eventcatalog.Id!.Value,
             searchFunc: async filter =>
@@ -50,4 +51,7 @@ public partial class EventCatalogs
 
 public class EventCatalogViewModel : UpdateEventCatalogCommand
 {
+    public EventCatalogViewModel() : base(default, default, default, default)
+    {
+    }
 }
