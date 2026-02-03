@@ -23,6 +23,9 @@ public class SomeEvent : AuditableEntity, IAggregateWithName
     public Guid EventCatalogId { get; private set; }
     public virtual EventCatalog? EventCatalog { get; private set; }
 
+    // Коллекция изображений для события
+    public virtual ICollection<EventImage> EventImages { get; protected set; } = new List<EventImage>();
+
     private SomeEvent() { }
 
     private SomeEvent(

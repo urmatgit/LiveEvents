@@ -21,6 +21,7 @@ public sealed class CatalogDbContext : FshDbContext
     public DbSet<Brand> Brands { get; set; } = null!;
     public DbSet<EventCatalog> EventCatalogs { get; set; } = null!;
     public DbSet<SomeEvent> SomeEvents { get; set; } = null!;
+    public DbSet<EventImage> EventImages { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

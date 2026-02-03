@@ -1,9 +1,10 @@
 using FSH.Framework.Core.Domain;
 using FSH.Starter.WebApi.Catalog.Domain;
+using FSH.Framework.Core.Domain.Contracts;
 
 namespace FSH.Starter.WebApi.Catalog.Domain;
 
-public class EventImage : BaseEntity
+public class EventImage : BaseEntity, IAggregateRoot
 {
     public Uri? ImageUrl { get; private set; }
     public Guid SomeEventId { get; private set; }

@@ -4,6 +4,7 @@ using FSH.Framework.Infrastructure.Persistence;
 using FSH.Starter.WebApi.Catalog.Domain;
 using FSH.Starter.WebApi.Catalog.Infrastructure.Endpoints.v1;
 using FSH.Starter.WebApi.Catalog.Infrastructure.Endpoints.v1.SomeEvents;
+using FSH.Starter.WebApi.Catalog.Infrastructure.Endpoints.v1.EventImages;
 using FSH.Starter.WebApi.Catalog.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -46,6 +47,13 @@ public static class CatalogModule
             someEventGroup.MapGetSomeEventListEndpoint();
             someEventGroup.MapSomeEventUpdateEndpoint();
             someEventGroup.MapSomeEventDeleteEndpoint();
+            
+            var eventImageGroup = app.MapGroup("eventimages").WithTags("eventimages");
+            eventImageGroup.MapCreateEventImageEndpoint();
+            eventImageGroup.MapGetEventImageEndpoint();
+            eventImageGroup.MapGetAllEventImagesEndpoint();
+            eventImageGroup.MapDeleteEventImageEndpoint();
+            eventImageGroup.MapDeleteEventImagesBySomeEventEndpoint();
         }
     }
     public static WebApplicationBuilder RegisterCatalogServices(this WebApplicationBuilder builder)
@@ -61,6 +69,8 @@ public static class CatalogModule
         builder.Services.AddKeyedScoped<IReadRepository<EventCatalog>, CatalogRepository<EventCatalog>>("catalog:eventcatalogs");
         builder.Services.AddKeyedScoped<IRepository<SomeEvent>, CatalogRepository<SomeEvent>>("catalog:someevents");
         builder.Services.AddKeyedScoped<IReadRepository<SomeEvent>, CatalogRepository<SomeEvent>>("catalog:someevents");
+        builder.Services.AddKeyedScoped<IRepository<EventImage>, CatalogRepository<EventImage>>("catalog:eventimages");
+        builder.Services.AddKeyedScoped<IReadRepository<EventImage>, CatalogRepository<EventImage>>("catalog:eventimages");
         return builder;
     }
     public static WebApplication UseCatalogModule(this WebApplication app)
