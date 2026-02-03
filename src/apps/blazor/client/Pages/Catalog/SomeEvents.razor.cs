@@ -70,10 +70,10 @@ public partial class SomeEvents
     {
         if (_eventCatalogs.Count == 0)
         {
-            var response = await _client.SearchEventCatalogsEndpointAsync("1", new SearchEventCatalogsCommand());
-            if (response?.Items != null)
+            var response = await _client.GetAllEventCatalogsEndpointAsync("1" );
+            if (response != null)
             {
-                _eventCatalogs = response.Items.ToList();
+                _eventCatalogs = response.ToList();
             }
         }
     }

@@ -38,6 +38,7 @@ public static class CatalogModule
             eventCatalogGroup.MapGetEventCatalogListEndpoint();
             eventCatalogGroup.MapEventCatalogUpdateEndpoint();
             eventCatalogGroup.MapEventCatalogDeleteEndpoint();
+            eventCatalogGroup.MapGetAllEventCatalogsEndpoint();
 
             var someEventGroup = app.MapGroup("someevents").WithTags("someevents");
             someEventGroup.MapSomeEventCreationEndpoint();

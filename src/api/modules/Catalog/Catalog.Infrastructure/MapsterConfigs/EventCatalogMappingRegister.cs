@@ -17,5 +17,7 @@ public class EventCatalogMappingRegister : IRegister
             .Map(dest => dest.Name, src => src.Name)
             .Map(dest => dest.Description, src => src.Description)
             .Map(dest => dest.ImageUrl, src => src.ImageUrl);
+        config.ForType<List<EventCatalog>, List<EventCatalogResponse>>();
+            
     }
 }
