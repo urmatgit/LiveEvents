@@ -285,7 +285,7 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<CreateEventImageResponse> CreateEventImageEndpointAsync(string version, CreateEventImageCommand body);
+        System.Threading.Tasks.Task<CreateEventImageResponse> CreateEventImageEndpointAsync(string version, string? imageUrl, System.Guid? someEventId, FileUploadCommand? image);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -297,7 +297,7 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<CreateEventImageResponse> CreateEventImageEndpointAsync(string version, CreateEventImageCommand body, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<CreateEventImageResponse> CreateEventImageEndpointAsync(string version, string? imageUrl, System.Guid? someEventId, FileUploadCommand? image, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// gets all event images
@@ -2564,9 +2564,9 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<CreateEventImageResponse> CreateEventImageEndpointAsync(string version, CreateEventImageCommand body)
+        public virtual System.Threading.Tasks.Task<CreateEventImageResponse> CreateEventImageEndpointAsync(string version, string? imageUrl, System.Guid? someEventId, FileUploadCommand? image)
         {
-            return CreateEventImageEndpointAsync(version, body, System.Threading.CancellationToken.None);
+            return CreateEventImageEndpointAsync(version, imageUrl, someEventId, image, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -2579,13 +2579,10 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
         /// <param name="version">The requested API version</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<CreateEventImageResponse> CreateEventImageEndpointAsync(string version, CreateEventImageCommand body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<CreateEventImageResponse> CreateEventImageEndpointAsync(string version, string? imageUrl, System.Guid? someEventId, FileUploadCommand? image, System.Threading.CancellationToken cancellationToken)
         {
             if (version == null)
                 throw new System.ArgumentNullException("version");
-
-            if (body == null)
-                throw new System.ArgumentNullException("body");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2593,9 +2590,30 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var json_ = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(body, JsonSerializerSettings);
-                    var content_ = new System.Net.Http.ByteArrayContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+                    var boundary_ = System.Guid.NewGuid().ToString();
+                    var content_ = new System.Net.Http.MultipartFormDataContent(boundary_);
+                    content_.Headers.Remove("Content-Type");
+                    content_.Headers.TryAddWithoutValidation("Content-Type", "multipart/form-data; boundary=" + boundary_);
+
+                    if (imageUrl != null)
+                    {
+                        content_.Add(new System.Net.Http.StringContent(ConvertToString(imageUrl, System.Globalization.CultureInfo.InvariantCulture)), "imageUrl");
+                    }
+
+                    if (someEventId == null)
+                        throw new System.ArgumentNullException("someEventId");
+                    else
+                    {
+                        content_.Add(new System.Net.Http.StringContent(ConvertToString(someEventId, System.Globalization.CultureInfo.InvariantCulture)), "someEventId");
+                    }
+
+                    if (image == null)
+                        throw new System.ArgumentNullException("image");
+                    else
+                    {
+                        var json_ = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(image, JsonSerializerSettings);
+                        content_.Add(new System.Net.Http.ByteArrayContent(json_), "image");
+                    }
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
@@ -7783,6 +7801,9 @@ namespace FSH.Starter.Blazor.Infrastructure.Api
 
         [System.Text.Json.Serialization.JsonPropertyName("someEventId")]
         public System.Guid SomeEventId { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("image")]
+        public FileUploadCommand Image { get; set; } = default!;
 
     }
 
