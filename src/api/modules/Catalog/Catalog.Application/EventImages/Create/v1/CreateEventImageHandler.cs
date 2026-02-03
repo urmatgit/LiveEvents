@@ -1,5 +1,7 @@
 using FSH.Framework.Core.Exceptions;
 using FSH.Framework.Core.Persistence;
+using FSH.Framework.Core.Storage;
+using FSH.Framework.Core.Storage.File;
 using FSH.Starter.WebApi.Catalog.Domain;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +13,8 @@ namespace FSH.Starter.WebApi.Catalog.Application.EventImages.Create.v1;
 public sealed class CreateEventImageHandler(
     [FromKeyedServices("catalog:eventimages")] IRepository<EventImage> repository,
     [FromKeyedServices("catalog:someevents")] IRepository<SomeEvent> someEventRepository,
-    ILogger<CreateEventImageHandler> logger)
+    ILogger<CreateEventImageHandler> logger,
+    IStorageService storageService)
     : IRequestHandler<CreateEventImageCommand, CreateEventImageResponse>
 {
     public async Task<CreateEventImageResponse> Handle(CreateEventImageCommand request, CancellationToken cancellationToken)
@@ -26,7 +29,11 @@ public sealed class CreateEventImageHandler(
 
         // Create the EventImage entity
         Uri? imageUrl = null;
-        if (!string.IsNullOrEmpty(request.ImageUrl))
+        if (request.Image != null)
+        {
+            imageUrl = await storageService.UploadAsync<SomeEvent>(request.Image, FileType.Image, cancellationToken);
+        }
+        else if (!string.IsNullOrEmpty(request.ImageUrl))
         {
             if (!Uri.TryCreate(request.ImageUrl, UriKind.Absolute, out imageUrl))
             {
