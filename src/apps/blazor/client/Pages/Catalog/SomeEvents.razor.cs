@@ -3,6 +3,7 @@ using FSH.Starter.Blazor.Infrastructure.Api;
 using FSH.Starter.Shared.Authorization;
 using Mapster;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace FSH.Starter.Blazor.Client.Pages.Catalog;
 
@@ -10,6 +11,12 @@ public partial class SomeEvents
 {
     [Inject]
     protected IApiClient _client { get; set; } = default!;
+
+    [Inject]
+    private IDialogService DialogService { get; set; } = default!;
+
+    [Inject]
+    private IStringLocalizer<SomeEvents> L { get; set; } = default!;
 
     protected EntityServerTableContext<SomeEventResponse, Guid, SomeEventViewModel> Context { get; set; } = default!;
 
@@ -89,5 +96,17 @@ public partial class SomeEvents
             _searchEventCatalogId = value;
             _ = _table.ReloadDataAsync();
         }
+    }
+
+    public async Task ViewImages(SomeEventResponse someEvent)
+    {
+        var options = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true, CloseButton = true, DisableBackdropClick = true };
+        var parameters = new DialogParameters()
+        {
+            { nameof(EventImageViewerModal.SomeEventId), someEvent.Id }
+        };
+
+        var dialog = DialogService.Show<EventImageViewerModal>(L["Images"], parameters, options);
+        var result = await dialog.Result;
     }
 }

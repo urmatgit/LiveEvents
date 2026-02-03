@@ -1,0 +1,118 @@
+@using FSH.Starter.Blazor.Infrastructure.Api
+@using Microsoft.AspNetCore.Components
+@inject IStringLocalizer<SomeEvents> L
+
+<MudDialog>
+    <TitleContent>
+        <MudText>@L["AddNewImage"]</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudFileUpload Files="@_selectedFiles" 
+                                   Accept=".jpg,.jpeg,.png,.gif,.webp" 
+                                   OnInputFilesChange="OnInputFilesChange"
+                                   MaxFileSize="5242880" 
+                                   Label="@L["SelectImageFile"]" />
+                </MudItem>
+                <MudItem xs="12" Class="mt-2">
+                    @if (_uploadPreviewUrl != null)
+                    {
+                        <div class="preview-container">
+                            <img src="@_uploadPreviewUrl" alt="Preview" class="upload-preview" />
+                        </div>
+                    }
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@L["Cancel"]</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UploadImage" Disabled="!CanUploadImage">
+            @L["Upload"]
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public Guid SomeEventId { get; set; }
+    [Parameter] public EventCallback OnImageAdded { get; set; }
+    [Inject] private IApiClient Client { get; set; } = default!;
+    [Inject] private IStringLocalizer<SomeEvents> L { get; set; } = default!;
+
+    private IBrowserFile[] _selectedFiles = Array.Empty<IBrowserFile>();
+    private string? _uploadPreviewUrl;
+    private MudForm _form = new();
+
+    private async Task OnInputFilesChange(IBrowserFile[] files)
+    {
+        _selectedFiles = files;
+        if (files.Length > 0)
+        {
+            var file = files[0]; // Take first file
+            var buffer = new byte[file.Size];
+            await file.OpenReadStream(maxAllowedSize: 5242880).ReadAsync(buffer);
+            var base64 = Convert.ToBase64String(buffer);
+            _uploadPreviewUrl = $"data:{file.ContentType};base64,{base64}";
+        }
+        else
+        {
+            _uploadPreviewUrl = null;
+        }
+        StateHasChanged();
+    }
+
+    private bool CanUploadImage => _selectedFiles.Length > 0;
+
+    private async Task UploadImage()
+    {
+        if (!CanUploadImage) return;
+
+        var file = _selectedFiles[0];
+        try
+        {
+            // Convert IBrowserFile to FileUploadCommand
+            var fileUploadCommand = await ConvertToFileUploadCommandAsync(file);
+            
+            var command = new CreateEventImageCommand
+            {
+                SomeEventId = SomeEventId,
+                Image = fileUploadCommand
+            };
+
+            await Client.CreateEventImageEndpointAsync("1", command);
+            
+            // Notify parent component
+            await OnImageAdded.InvokeAsync();
+            
+            // Close dialog
+            MudDialog.Close();
+        }
+        catch (Exception ex)
+        {
+            // Handle error appropriately
+            Console.WriteLine($"Error uploading image: {ex.Message}");
+            // In real app, show proper error message
+        }
+    }
+
+    private async Task<FileUploadCommand> ConvertToFileUploadCommandAsync(IBrowserFile browserFile)
+    {
+        var buffer = new byte[browserFile.Size];
+        await browserFile.OpenReadStream(maxAllowedSize: 5242880).ReadAsync(buffer);
+        var base64String = Convert.ToBase64String(buffer);
+        var fileName = browserFile.Name;
+        var extension = Path.GetExtension(fileName);
+
+        return new FileUploadCommand
+        {
+            Name = fileName,
+            Extension = extension,
+            Data = $"data:{browserFile.ContentType};base64,{base64String}"
+        };
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}

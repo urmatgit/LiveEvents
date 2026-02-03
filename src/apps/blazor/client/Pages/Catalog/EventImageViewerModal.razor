@@ -1,0 +1,144 @@
+@using FSH.Starter.Blazor.Infrastructure.Api
+@using Microsoft.AspNetCore.Components
+@inject IApiClient Client
+@inject IStringLocalizer<SomeEvents> L
+
+<MudDialog Options="options">
+    <TitleContent>
+        <MudText Typo="Typo.h6">@L["Images"]</MudText>
+    </TitleContent>
+    <DialogContent>
+        <div class="d-flex flex-column h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <MudText>@L["TotalImages"]: @_images.Count</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddImageDialog">
+                    @L["AddImage"]
+                </MudButton>
+            </div>
+
+            @if (_loading)
+            {
+                <div class="d-flex justify-content-center align-items-center flex-grow-1">
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+                </div>
+            }
+            else if (_images.Any())
+            {
+                <div class="image-grid-container">
+                    <MudGrid Class="w-100">
+                        @for (int i = 0; i < _images.Count; i++)
+                        {
+                            var image = _images[i];
+                            <MudItem xs="12" sm="6" md="4" lg="3" Class="d-flex flex-column align-items-center p-2">
+                                <div class="image-card">
+                                    @if (!string.IsNullOrEmpty(image.ImageUrl?.ToString()))
+                                    {
+                                        <img src="@image.ImageUrl" alt="Event Image" class="image-preview" style="max-width: 100%; height: 150px; object-fit: cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="no-image-placeholder d-flex align-items-center justify-content-center" style="height: 150px;">
+                                            <MudIcon Icon="@Icons.Material.Filled.ImageNotSupported" Size="Size.Large" />
+                                        </div>
+                                    }
+                                    <div class="image-actions mt-2">
+                                        <MudButton Variant="Variant.Text" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete"
+                                                  OnClick="() => DeleteImage(image.Id)" Size="Size.Small">
+                                            @L["Delete"]
+                                        </MudButton>
+                                    </div>
+                                </div>
+                            </MudItem>
+                        }
+                    </MudGrid>
+                </div>
+            }
+            else
+            {
+                <div class="d-flex justify-content-center align-items-center flex-grow-1">
+                    <MudText Class="text-muted">@L["NoImagesFound"]</MudText>
+                </div>
+            }
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@L["Close"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    DialogOptions options = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true, CloseButton = true, DisableBackdropClick = true };
+    
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public Guid SomeEventId { get; set; }
+    [Inject] private IApiClient Client { get; set; } = default!;
+    [Inject] private IStringLocalizer<SomeEvents> L { get; set; } = default!;
+    [Inject] private IDialogService DialogService { get; set; } = default!;
+
+    private List<EventImageResponse> _images = new();
+    private bool _loading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadImagesAsync();
+    }
+
+    private async Task LoadImagesAsync()
+    {
+        _loading = true;
+        StateHasChanged();
+        try
+        {
+            var response = await Client.GetAllEventImagesEndpointAsync("1");
+            _images = response.Where(img => img.SomeEventId == SomeEventId).ToList();
+        }
+        catch (Exception ex)
+        {
+            // Log error
+            Console.WriteLine($"Error loading images: {ex.Message}");
+        }
+        finally
+        {
+            _loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OpenAddImageDialog()
+    {
+        var options = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true, DisableBackdropClick = true };
+        var parameters = new DialogParameters()
+        {
+            { nameof(AddImageDialog.SomeEventId), SomeEventId },
+            { nameof(AddImageDialog.OnImageAdded), EventCallback.Factory.Create<EventArgs>(this, async () => {
+                await LoadImagesAsync();
+                StateHasChanged();
+            })}
+        };
+
+        var dialog = DialogService.Show<AddImageDialog>(L["AddNewImage"], parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            await LoadImagesAsync();
+        }
+    }
+
+    private async Task DeleteImage(Guid imageId)
+    {
+        try
+        {
+            await Client.DeleteEventImageEndpointAsync("1", imageId);
+            // Refresh the images list
+            await LoadImagesAsync();
+        }
+        catch (Exception ex)
+        {
+            // Handle error appropriately
+            Console.WriteLine($"Error deleting image: {ex.Message}");
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}
