@@ -14,4 +14,5 @@ public static class FshResources
     public const string AuditTrails = nameof(AuditTrails);
     public const string EventCatalogs = nameof(EventCatalogs);
     public const string SomeEvents = nameof(SomeEvents);
+    public const string EventImages = nameof(EventImages);
 }

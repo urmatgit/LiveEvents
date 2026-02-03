@@ -59,6 +59,14 @@ public static class FshPermissions
         new("Delete SomeEvents", FshActions.Delete, FshResources.SomeEvents),
         new("Export SomeEvents", FshActions.Export, FshResources.SomeEvents),
 
+        //EventImages
+        new("View EventImages", FshActions.View, FshResources.EventImages, IsBasic: true),
+        new("Search EventImages", FshActions.Search, FshResources.EventImages, IsBasic: true),
+        new("Create EventImages", FshActions.Create, FshResources.EventImages),
+        new("Update EventImages", FshActions.Update, FshResources.EventImages),
+        new("Delete EventImages", FshActions.Delete, FshResources.EventImages),
+        new("Export EventImages", FshActions.Export, FshResources.EventImages),
+
         //todos
         new("View Todos", FshActions.View, FshResources.Todos, IsBasic: true),
         new("Search Todos", FshActions.Search, FshResources.Todos, IsBasic: true),
