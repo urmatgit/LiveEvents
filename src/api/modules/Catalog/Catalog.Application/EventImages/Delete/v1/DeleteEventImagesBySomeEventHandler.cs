@@ -1,5 +1,6 @@
 using FSH.Framework.Core.Exceptions;
 using FSH.Framework.Core.Persistence;
+using FSH.Framework.Core.Storage;
 using FSH.Starter.WebApi.Catalog.Application.EventImages.Delete.v1;
 using FSH.Starter.WebApi.Catalog.Application.EventImages.Get.v1;
 using FSH.Starter.WebApi.Catalog.Domain;
@@ -11,7 +12,8 @@ namespace FSH.Starter.WebApi.Catalog.Application.EventImages.Delete.v1;
 
 public sealed class DeleteEventImagesBySomeEventHandler(
     [FromKeyedServices("catalog:eventimages")] IRepository<EventImage> repository,
-    ILogger<DeleteEventImagesBySomeEventHandler> logger)
+    ILogger<DeleteEventImagesBySomeEventHandler> logger,
+    IStorageService storageService)
     : IRequestHandler<DeleteEventImagesBySomeEventCommand>
 {
     public async Task Handle(DeleteEventImagesBySomeEventCommand request, CancellationToken cancellationToken)
@@ -28,13 +30,19 @@ public sealed class DeleteEventImagesBySomeEventHandler(
          
         }
 
-        // Delete all event images
+        // Delete all event images and their files from disk
         foreach (var eventImage in eventImages)
         {
+            // Удаляем изображение с диска, если оно существует
+            if (eventImage.ImageUrl != null)
+            {
+                storageService.Remove(eventImage.ImageUrl);
+            }
+            
             await repository.DeleteAsync(eventImage, cancellationToken);
         }
 
-        logger.LogInformation("Successfully deleted {Count} EventImages for SomeEvent with ID: {SomeEventId}", 
+        logger.LogInformation("Successfully deleted {Count} EventImages for SomeEvent with ID: {SomeEventId}",
             eventImages.Count, request.SomeEventId);
 
         
