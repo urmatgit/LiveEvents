@@ -4,7 +4,7 @@
 @using FSH.Starter.Shared.Authorization
 @using Mapster
 @using Microsoft.AspNetCore.Components
-@inject IStringLocalizer<SomeEvents> L
+
 
 <PageHeader Title="SomeEvents" Header="SomeEvents" SubHeader="Manage your SomeEvents." />
 
@@ -21,7 +21,7 @@
     </AdvancedSearchContent>
 
     <ExtraActions>
-        <MudMenuItem OnClick="(() => ViewImages(context))">@L["Images"]</MudMenuItem>
+        <MudMenuItem OnClick="(() => ViewImages(context))">Images</MudMenuItem>
     </ExtraActions>
 
     <EditFormContent>
