@@ -14,8 +14,6 @@ COPY ["api/framework/Infrastructure/Infrastructure.csproj", "api/framework/Infra
 COPY ["api/modules/Catalog/Catalog.Domain/Catalog.Domain.csproj", "api/modules/Catalog/Catalog.Domain/"]
 COPY ["api/modules/Catalog/Catalog.Application/Catalog.Application.csproj", "api/modules/Catalog/Catalog.Application/"]
 COPY ["api/modules/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj", "api/modules/Catalog/Catalog.Infrastructure/"]
-COPY ["api/modules/Todo/Todo.csproj", "api/modules/Todo/"]
-COPY ["api/migrations/MSSQL/MSSQL.csproj", "api/migrations/MSSQL/"]
 COPY ["api/migrations/PostgreSQL/PostgreSQL.csproj", "api/migrations/PostgreSQL/"]
 COPY ["Shared/Shared.csproj", "Shared/"]
 
