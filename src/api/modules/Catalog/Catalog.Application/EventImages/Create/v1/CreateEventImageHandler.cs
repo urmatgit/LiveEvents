@@ -31,7 +31,7 @@ public sealed class CreateEventImageHandler(
         Uri? imageUrl = null;
         if (request.Image != null)
         {
-            imageUrl = await storageService.UploadAsync<SomeEvent>(request.Image, FileType.Image, cancellationToken);
+            imageUrl = await storageService.UploadAsync<EventImage>(request.Image, FileType.Image, cancellationToken);
         }
         else if (!string.IsNullOrEmpty(request.ImageUrl))
         {

@@ -1,3 +1,4 @@
+@using FSH.Starter.Blazor.Client.Components.Common.Helpers
 @using FSH.Starter.Blazor.Infrastructure.Api
 @using Microsoft.AspNetCore.Components
 @using Microsoft.AspNetCore.Components.Forms
@@ -76,11 +77,11 @@
         => _dragClass = DefaultDragClass;
     private void SetDragClass()
     => _dragClass = $"{DefaultDragClass} mud-border-primary";
-    private void OnInputFileChanged(InputFileChangeEventArgs e)
+    private async Task OnInputFileChanged(InputFileChangeEventArgs e)
     {
         var files = e.GetMultipleFiles(); // Allow multiple files
         // Process files asynchronously but don't await in the event handler
-        _ = ProcessFiles(files.ToArray());
+        await  ProcessFiles(files.ToArray());
     }
 
     private string GetDropZoneClass()
@@ -88,42 +89,9 @@
         return _isDragOver ? "drag-over" : "";
     }
 
-    private async Task OnDragEnter(DragEventArgs e)
-    {
-        _isDragOver = true;
-        StateHasChanged();
-        await Task.CompletedTask;
-    }
 
-    private async Task OnDragOverAsync(DragEventArgs e)
-    {
-        _isDragOver = true;
-        StateHasChanged();
-        await Task.CompletedTask;
-    }
 
-    private async Task OnDragLeave(DragEventArgs e)
-    {
-        _isDragOver = false;
-        StateHasChanged();
-        await Task.CompletedTask;
-    }
 
-    private async Task OnDropAsync(DragEventArgs e)
-    {
-        _isDragOver = false;
-        StateHasChanged();
-        // Note: Direct file access from drag/drop isn't supported in Blazor WebAssembly
-        // We'll rely on the MudFileUpload for the actual file selection
-        await Task.CompletedTask;
-    }
-
-    private async Task TriggerFileInput()
-    {
-        await Task.Delay(1); // Small delay to allow UI to update
-        // Note: In Blazor WebAssembly, we can't directly trigger the file input via JS interop easily
-        // So we'll just ensure the MudFileUpload is accessible
-    }
 
     private async Task ProcessFiles(IBrowserFile[] files)
     {
@@ -189,27 +157,32 @@
             {
                 // Create multipart form data for each file
                 var formData = new MultipartFormDataContent();
-                
+
                 // Add the image file
                 var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 5242880));
                 fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
                 formData.Add(fileContent, "Image", file.Name);
-                
+
                 // Add SomeEventId as form field
                 var eventIdContent = new StringContent(SomeEventId.ToString());
                 eventIdContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/plain");
                 formData.Add(eventIdContent, "SomeEventId");
-                
+                var fileCommand = await file.ConvertToFileUploadCommandAsync(Toast,"eventimage");
+                var command = new CreateEventImageCommand();
+                command.SomeEventId=SomeEventId;
+                command.Image = fileCommand;
+                var response = await Client.CreateEventImageEndpointAsync("1", command);
                 // Make the HTTP POST request directly
-                var response = await Http.PostAsync("api/v1/eventimages", formData);
                 
-                if (!response.IsSuccessStatusCode)
-                {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Error uploading image: {response.StatusCode} - {errorContent}");
-                    // Consider showing an error message to the user
-                    return; // Stop uploading if there's an error
-                }
+                // Обновляем информацию о сущности после создания
+                StateHasChanged();
+                // if (!response.IsSuccessStatusCode)
+                // {
+                //     var errorContent = await response.Content.ReadAsStringAsync();
+                //     Console.WriteLine($"Error uploading image: {response.StatusCode} - {errorContent}");
+                //     // Consider showing an error message to the user
+                //     return; // Stop uploading if there's an error
+                // }
             }
             
             // Notify parent component after all files are uploaded

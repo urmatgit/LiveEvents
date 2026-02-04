@@ -1,3 +1,4 @@
+using FSH.Starter.Blazor.Client.Components.Common.Helpers;
 using FSH.Starter.Blazor.Client.Components.Dialogs;
 using FSH.Starter.Blazor.Client.Components.EntityTable;
 using FSH.Starter.Blazor.Infrastructure.Api;
@@ -60,7 +61,7 @@ public partial class EventCatalogs
             updateFunc: async (id, eventcatalog) =>
             {
                 // Преобразуем IBrowserFile в FileUploadCommand если есть изображение
-                var imageCommand = await ConvertToFileUploadCommandAsync(eventcatalog.ImageFile);
+                var imageCommand = await eventcatalog.ImageFile.ConvertToFileUploadCommandAsync(Toast,"eventcatalog");
             var command = new UpdateEventCatalogCommand();
             command.Id = id;
             command.Name = eventcatalog.Name;
@@ -75,41 +76,7 @@ public partial class EventCatalogs
             },
             deleteFunc: async id => await _client.DeleteEventCatalogEndpointAsync("1",id));
 
-    private async Task<FileUploadCommand?> ConvertToFileUploadCommandAsync(IBrowserFile? browserFile)
-    {
-        if (browserFile == null) return null;
-
-        // Проверяем формат изображения
-        string? extension = Path.GetExtension(browserFile.Name);
-        if (!IsSupportedImageFormat(extension))
-        {
-            Toast.Add("Image Format Not Supported.", Severity.Error);
-            return null;
-        }
-
-        // Генерируем уникальное имя файла
-        string fileName = $"eventcatalog-{Guid.NewGuid():N}";
-        fileName = fileName[..Math.Min(fileName.Length, 90)];
-
-        // Обработка изображения
-        var imageFile = await browserFile.RequestImageFileAsync("image/jpeg", 800, 600);
-        byte[] buffer = new byte[imageFile.Size];
-        await imageFile.OpenReadStream(1024*1024*10).ReadAsync(buffer); // Максимальный размер 10MB
-        string base64String = $"data:image/jpeg;base64,{Convert.ToBase64String(buffer)}";
-
-        return new FileUploadCommand
-        {
-            Name = fileName,
-            Data = base64String,
-            Extension = extension
-        };
-    }
-
-    private static bool IsSupportedImageFormat(string? extension)
-    {
-        var supportedFormats = new[] { ".jpg", ".jpeg", ".png", ".webp" };
-        return extension != null && supportedFormats.Contains(extension.ToLower());
-    }
+   
     public async Task RemoveImageAsync()
     {
         string deleteContent = "You're sure you want to delete your Profile Image?";
