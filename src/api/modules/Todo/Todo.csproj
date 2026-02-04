@@ -5,6 +5,11 @@
     <AssemblyName>FSH.Starter.WebApi.Modules.Todo</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" />
+    <PackageReference Include="Carter" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\framework\Core\Core.csproj" />
+    <ProjectReference Include="..\..\framework\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 </Project>

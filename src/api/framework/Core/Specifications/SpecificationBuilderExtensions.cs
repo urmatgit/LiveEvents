@@ -76,7 +76,8 @@ public static class SpecificationBuilderExtensions
             }
         }
 
-        return new OrderedSpecificationBuilder<T>(specificationBuilder.Specification);
+        // Return an ordered specification by using OrderBy with a dummy property to transition to IOrderedSpecificationBuilder
+        return specificationBuilder.OrderBy(_ => 1);
     }
 
     private static void AddSearchPropertyByKeyword<T>(
@@ -126,24 +127,25 @@ public static class SpecificationBuilderExtensions
         {
             var parameter = Expression.Parameter(typeof(T));
 
-            Expression binaryExpresioFilter;
+            Expression binaryExpresionFilter;
 
             if (!string.IsNullOrEmpty(filter.Logic))
             {
                 if (filter.Filters is null) throw new CustomException("The Filters attribute is required when declaring a logic");
-                binaryExpresioFilter = CreateFilterExpression(filter.Logic, filter.Filters, parameter);
+                binaryExpresionFilter = CreateFilterExpression(filter.Logic, filter.Filters, parameter);
             }
             else
             {
                 var filterValid = GetValidFilter(filter);
-                binaryExpresioFilter = CreateFilterExpression(filterValid.Field!, filterValid.Operator!, filterValid.Value, parameter);
+                binaryExpresionFilter = CreateFilterExpression(filterValid.Field!, filterValid.Operator!, filterValid.Value, parameter);
             }
 
             ((List<WhereExpressionInfo<T>>)specificationBuilder.Specification.WhereExpressions)
-                .Add(new WhereExpressionInfo<T>(Expression.Lambda<Func<T, bool>>(binaryExpresioFilter, parameter)));
+                .Add(new WhereExpressionInfo<T>(Expression.Lambda<Func<T, bool>>(binaryExpresionFilter, parameter)));
         }
 
-        return new OrderedSpecificationBuilder<T>(specificationBuilder.Specification);
+        // Return an ordered specification by using OrderBy with a dummy property to transition to IOrderedSpecificationBuilder
+        return specificationBuilder.OrderBy(_ => 1);
     }
 
     private static Expression CreateFilterExpression(
@@ -236,7 +238,7 @@ public static class SpecificationBuilderExtensions
     }
 
     private static string GetStringFromJsonElement(object value)
-        => ((JsonElement)value).GetString()!;
+        => ((JsonElement)value).GetString();
 
     private static ConstantExpression GeValuetExpression(
         string field,
@@ -328,7 +330,8 @@ public static class SpecificationBuilderExtensions
             }
         }
 
-        return new OrderedSpecificationBuilder<T>(specificationBuilder.Specification);
+        // Return an ordered specification by using OrderBy with a dummy property to transition to IOrderedSpecificationBuilder
+        return specificationBuilder.OrderBy(_ => 1);
     }
 
     private static Dictionary<string, OrderTypeEnum> ParseOrderBy(string[] orderByFields) =>
