@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>FSH.Starter.WebApi.Migrations.MSSQL</RootNamespace>
     <AssemblyName>FSH.Starter.WebApi.Migrations.MSSQL</AssemblyName>
   </PropertyGroup>
@@ -15,9 +16,9 @@
     <ProjectReference Include="..\..\modules\Todo\Todo.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Catalog\" />
-    <Folder Include="Identity\" />
-    <Folder Include="Tenant\" />
-    <Folder Include="Todo\" />
+    <Folder Include="Catalog" />
+    <Folder Include="Identity" />
+    <Folder Include="Tenant" />
+    <Folder Include="Todo" />
   </ItemGroup>
 </Project>
