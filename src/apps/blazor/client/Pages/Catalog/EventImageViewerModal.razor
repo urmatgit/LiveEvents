@@ -9,13 +9,16 @@
     </TitleContent>
     <DialogContent>
         <div class="d-flex flex-column h-100">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <MudText>Total Images: @_images.Count</MudText>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddImageDialog">
-                    "AddImage"
-                </MudButton>
-            </div>
-
+            <MudStack Row="true">
+                <MudPaper Class="pa-3">
+                    <MudText>Total Images: @_images.Count</MudText>
+                </MudPaper>
+                <MudPaper Class="pa-3">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddImageDialog">
+                        AddImage
+                    </MudButton>
+                </MudPaper>
+            </MudStack>
             @if (_loading)
             {
                 <div class="d-flex justify-content-center align-items-center flex-grow-1">
@@ -44,7 +47,7 @@
                                     <div class="image-actions mt-2">
                                         <MudButton Variant="Variant.Text" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete"
                                                   OnClick="() => DeleteImage(image.Id)" Size="Size.Small">
-                                            "Delete"
+                                            Delete
                                         </MudButton>
                                     </div>
                                 </div>
@@ -56,13 +59,13 @@
             else
             {
                 <div class="d-flex justify-content-center align-items-center flex-grow-1">
-                    <MudText Class="text-muted">"No Images Found"</MudText>
+                    <MudText Class="text-muted">No Images Found</MudText>
                 </div>
             }
         </div>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">"Close"</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Close"  OnClick="Cancel" >Close</MudButton>
     </DialogActions>
 </MudDialog>
 

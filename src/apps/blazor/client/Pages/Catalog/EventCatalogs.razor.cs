@@ -47,7 +47,7 @@ public partial class EventCatalogs
             createFunc: async eventcatalog =>
             {
                 // Преобразуем IBrowserFile в FileUploadCommand если есть изображение
-                var imageCommand = await ConvertToFileUploadCommandAsync(eventcatalog.ImageFile);
+                var imageCommand = await eventcatalog.ImageFile.ConvertToFileUploadCommandAsync(Toast,"eventcatalog");
             var command = new CreateEventCatalogCommand();
             command.Name = eventcatalog.Name;
             command.Description = eventcatalog.Description;
