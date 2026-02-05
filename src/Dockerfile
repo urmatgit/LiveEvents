@@ -33,7 +33,7 @@ RUN mkdir -p "api/server/obj" && \
     echo '    <PackageReference Update="Microsoft.CodeAnalysis.Common" Version="4.5.0" />' >> "api/server/obj/packages.props" && \
     echo '    <PackageReference Update="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.5.0" />' >> "api/server/obj/packages.props" && \
     echo '    <PackageReference Update="Ardalis.Specification" Version="8.0.0" />' >> "api/server/obj/packages.props" && \
-    echo '    <PackageReference Update="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />' >> "api/server/obj/packages.props" && \
+    echo '    <PackageReference Update="Microsoft.Extensions.Logging.Abstractions" Version="9.0.12" />' >> "api/server/obj/packages.props" && \
     echo '    <PackageReference Update="Newtonsoft.Json" Version="13.0.3" />' >> "api/server/obj/packages.props" && \
     echo '  </ItemGroup>' >> "api/server/obj/packages.props" && \
     echo '</Project>' >> "api/server/obj/packages.props"
