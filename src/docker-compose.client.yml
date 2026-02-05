@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  client:
+    build:
+      context: .
+      dockerfile: apps/blazor/Dockerfile
+    container_name: liveevents-blazor-client
+    ports:
+      - "8081:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    networks:
+      - liveevents-network
+    restart: on-failure
+
+networks:
+  liveevents-network:
+    driver: bridge
