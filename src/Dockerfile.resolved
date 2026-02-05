@@ -59,7 +59,7 @@ RUN dotnet build "Server.csproj" -c $BUILD_CONFIGURATION -o /app/build -nowarn:m
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false -nowarn:msb3202,nu1503
+RUN dotnet publish "Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false /p:PublishSingleFile=false -p:PublishProfile=Default -p:ContainerBuild=false -nowarn:msb3202,nu1503
 
 FROM base AS final
 WORKDIR /app
