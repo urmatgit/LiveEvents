@@ -19,9 +19,6 @@
     <Folder Include="Catalog" />
     <Folder Include="Identity" />
     <Folder Include="Tenant" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.12" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-        <PackageReference Include="Ardalis.Specification" />
-            <Folder Include="Todo" />
+    <Folder Include="Todo" />
   </ItemGroup>
 </Project>
